@@ -154,6 +154,18 @@ const CreatePost = ({
             </div>
 
             {uploadMethod === 'upload' ? <div className="space-y-2">
+                <Input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setImageFile(file);
+                      setError('');
+                    }
+                  }}
+                  className="h-12"
+                />
                 
                 {imageFile && <div className="mt-2">
                     <img src={URL.createObjectURL(imageFile)} alt="Preview" className="w-full h-40 object-cover rounded-lg" />
