@@ -212,7 +212,7 @@ const CreatePost = ({ onPostCreated }: CreatePostProps) => {
                       setError('');
                     }
                   }}
-                  className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-travel-turquoise file:text-white hover:file:bg-travel-turquoise/90"
+                  className="file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-travel-turquoise file:text-white hover:file:bg-travel-turquoise/90 h-12"
                 />
                 {imageFile && (
                   <div className="mt-2">
