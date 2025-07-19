@@ -51,6 +51,7 @@ const Hero = () => {
             <Button 
               size="lg" 
               className="bg-travel-turquoise hover:bg-travel-ocean text-white px-8 py-3 rounded-full travel-transition travel-shadow group"
+              onClick={() => document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <MapPin className="w-5 h-5 mr-2 group-hover:animate-bounce" />
               Explore Destinations
@@ -59,6 +60,7 @@ const Hero = () => {
               variant="outline" 
               size="lg"
               className="border-white text-travel-ocean hover:bg-white hover:text-travel-ocean px-8 py-3 rounded-full travel-transition group"
+              onClick={() => document.getElementById('stories')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <Camera className="w-5 h-5 mr-2 group-hover:animate-pulse" />
               View Stories
