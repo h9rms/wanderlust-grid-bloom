@@ -172,12 +172,12 @@ const Profile = () => {
             {/* Profile Info */}
             <div className="flex-1 text-center md:text-left">
               <h1 className="font-playfair text-3xl font-bold text-foreground mb-2">
-                {userProfile?.full_name || userProfile?.username || 'Mein Profil'}
+                {userProfile?.full_name || userProfile?.username || 'My Profile'}
               </h1>
               <p className="text-muted-foreground mb-2">{user.email}</p>
               <div className="flex items-center justify-center md:justify-start text-sm text-muted-foreground mb-4">
                 <Calendar className="w-4 h-4 mr-1" />
-                Mitglied seit {joinDate}
+                Member since {joinDate}
               </div>
 
               {/* Stats */}
@@ -188,11 +188,11 @@ const Profile = () => {
                 </div>
                 <div className="text-center">
                   <div className="font-semibold text-foreground">{likedPosts.length}</div>
-                  <div className="text-sm text-muted-foreground">Gelikte Posts</div>
+                  <div className="text-sm text-muted-foreground">Liked Posts</div>
                 </div>
                 <div className="text-center">
                   <div className="font-semibold text-foreground">{savedPosts.length}</div>
-                  <div className="text-sm text-muted-foreground">Gespeicherte Posts</div>
+                  <div className="text-sm text-muted-foreground">Saved Posts</div>
                 </div>
               </div>
             </div>
@@ -200,7 +200,7 @@ const Profile = () => {
             {/* Settings Button */}
             <Button variant="outline" size="sm">
               <Settings className="w-4 h-4 mr-2" />
-              Einstellungen
+              Settings
             </Button>
           </div>
         </motion.div>
@@ -215,15 +215,15 @@ const Profile = () => {
             <TabsList className="grid w-full grid-cols-3 mb-8">
               <TabsTrigger value="posts" className="flex items-center">
                 <User className="w-4 h-4 mr-2" />
-                Meine Posts
+                My Posts
               </TabsTrigger>
               <TabsTrigger value="liked" className="flex items-center">
                 <Heart className="w-4 h-4 mr-2" />
-                Gelikte Posts
+                Liked Posts
               </TabsTrigger>
               <TabsTrigger value="saved" className="flex items-center">
                 <Bookmark className="w-4 h-4 mr-2" />
-                Gespeicherte Posts
+                Saved Posts
               </TabsTrigger>
             </TabsList>
 
@@ -243,13 +243,13 @@ const Profile = () => {
                 <div className="text-center py-12">
                   <User className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                   <p className="text-muted-foreground text-lg">
-                    Du hast noch keine Posts erstellt.
+                    You haven't created any posts yet.
                   </p>
                   <Button 
                     onClick={() => navigate('/')} 
                     className="mt-4 bg-travel-turquoise hover:bg-travel-turquoise/90"
                   >
-                    Ersten Post erstellen
+                    Create first post
                   </Button>
                 </div>
               )}
@@ -271,7 +271,7 @@ const Profile = () => {
                 <div className="text-center py-12">
                   <Heart className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                   <p className="text-muted-foreground text-lg">
-                    Du hast noch keine Posts geliked.
+                    You haven't liked any posts yet.
                   </p>
                 </div>
               )}
@@ -293,7 +293,7 @@ const Profile = () => {
                 <div className="text-center py-12">
                   <Bookmark className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                   <p className="text-muted-foreground text-lg">
-                    Du hast noch keine Posts gespeichert.
+                    You haven't saved any posts yet.
                   </p>
                 </div>
               )}

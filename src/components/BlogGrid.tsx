@@ -87,10 +87,10 @@ const BlogGrid = () => {
           className="text-center mb-16"
         >
           <h2 className="font-playfair text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Reise-Geschichten
+            Travel Stories
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Entdecke inspirierende Abenteuer und teile deine eigenen Erlebnisse
+            Discover inspiring adventures and share your own experiences
           </p>
           
           {user && (
@@ -135,11 +135,11 @@ const BlogGrid = () => {
             className="text-center py-12"
           >
             <p className="text-muted-foreground text-lg mb-4">
-              Noch keine Posts vorhanden.
+              No posts available yet.
             </p>
             {user && (
               <p className="text-muted-foreground">
-                Sei der erste und erstelle einen Post!
+                Be the first and create a post!
               </p>
             )}
           </motion.div>

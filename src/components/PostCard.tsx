@@ -81,8 +81,8 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
   const handleLike = async () => {
     if (!user) {
       toast({
-        title: "Anmeldung erforderlich",
-        description: "Du musst angemeldet sein, um Posts zu liken.",
+        title: "Login required",
+        description: "You must be logged in to like posts.",
         variant: "destructive",
       });
       return;
@@ -118,8 +118,8 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
   const handleSave = async () => {
     if (!user) {
       toast({
-        title: "Anmeldung erforderlich",
-        description: "Du musst angemeldet sein, um Posts zu speichern.",
+        title: "Login required",
+        description: "You must be logged in to save posts.",
         variant: "destructive",
       });
       return;
@@ -135,8 +135,8 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
           .eq('user_id', user.id);
         setSaved(false);
         toast({
-          title: "Post entfernt",
-          description: "Post wurde aus deinen gespeicherten Posts entfernt.",
+          title: "Post removed",
+          description: "Post has been removed from your saved posts.",
         });
       } else {
         // Add save
@@ -145,13 +145,13 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
           .insert({ post_id: post.id, user_id: user.id });
         setSaved(true);
         toast({
-          title: "Post gespeichert",
-          description: "Post wurde zu deinen gespeicherten Posts hinzugefügt.",
+          title: "Post saved",
+          description: "Post has been added to your saved posts.",
         });
       }
     } catch (error: any) {
       toast({
-        title: "Fehler",
+        title: "Error",
         description: error.message,
         variant: "destructive",
       });
@@ -176,8 +176,8 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(`${text} - ${url}`);
       toast({
-        title: "Link kopiert",
-        description: "Der Link wurde in die Zwischenablage kopiert.",
+        title: "Link copied",
+        description: "The link has been copied to clipboard.",
       });
     }
   };
@@ -201,12 +201,12 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
       setIsEditOpen(false);
       onPostUpdated();
       toast({
-        title: "Post aktualisiert",
-        description: "Dein Post wurde erfolgreich aktualisiert.",
+        title: "Post updated",
+        description: "Your post has been successfully updated.",
       });
     } catch (error: any) {
       toast({
-        title: "Fehler",
+        title: "Error",
         description: error.message,
         variant: "destructive",
       });
@@ -216,7 +216,7 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
   };
 
   const handleDelete = async () => {
-    if (!confirm('Möchtest du diesen Post wirklich löschen?')) return;
+    if (!confirm('Do you really want to delete this post?')) return;
 
     try {
       const { error } = await supabase
@@ -228,12 +228,12 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
 
       onPostDeleted();
       toast({
-        title: "Post gelöscht",
-        description: "Dein Post wurde erfolgreich gelöscht.",
+        title: "Post deleted",
+        description: "Your post has been successfully deleted.",
       });
     } catch (error: any) {
       toast({
-        title: "Fehler",
+        title: "Error",
         description: error.message,
         variant: "destructive",
       });
@@ -276,7 +276,7 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
               </div>
               <div>
                 <p className="font-medium text-foreground">
-                  {post.profiles?.full_name || post.profiles?.username || 'Anonymer Nutzer'}
+                  {post.profiles?.full_name || post.profiles?.username || 'Anonymous User'}
                 </p>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Calendar className="w-3 h-3 mr-1" />
@@ -295,11 +295,11 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
                     <Edit className="w-4 h-4 mr-2" />
-                    Bearbeiten
+                    Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleDelete} className="text-destructive">
                     <Trash2 className="w-4 h-4 mr-2" />
-                    Löschen
+                    Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -363,12 +363,12 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Post bearbeiten</DialogTitle>
+            <DialogTitle>Edit Post</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleEdit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="editTitle">Titel</Label>
+              <Label htmlFor="editTitle">Title</Label>
               <Input
                 id="editTitle"
                 value={editTitle}
@@ -378,7 +378,7 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="editContent">Beschreibung</Label>
+              <Label htmlFor="editContent">Description</Label>
               <Textarea
                 id="editContent"
                 value={editContent}
@@ -389,7 +389,7 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="editLocation">Ort</Label>
+              <Label htmlFor="editLocation">Location</Label>
               <Input
                 id="editLocation"
                 value={editLocation}
@@ -404,14 +404,14 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
                 variant="outline" 
                 onClick={() => setIsEditOpen(false)}
               >
-                Abbrechen
+                Cancel
               </Button>
               <Button 
                 type="submit" 
                 disabled={loading}
                 className="bg-travel-turquoise hover:bg-travel-turquoise/90"
               >
-                {loading ? 'Wird gespeichert...' : 'Speichern'}
+                {loading ? 'Saving...' : 'Save'}
               </Button>
             </div>
           </form>
