@@ -347,14 +347,28 @@ const Profile = () => {
                           <User className="w-8 h-8 text-white" />
                         )}
                       </div>
-                      <div className="flex-1">
-                        <Input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleAvatarChange}
-                          className="text-sm"
-                        />
-                      </div>
+                       <div className="flex-1">
+                         <div className="relative">
+                           <input
+                             type="file"
+                             accept="image/*"
+                             onChange={handleAvatarChange}
+                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                             id="avatar-upload"
+                           />
+                           <Button
+                             type="button"
+                             variant="outline"
+                             className="w-full justify-start text-sm h-10"
+                             asChild
+                           >
+                             <label htmlFor="avatar-upload" className="cursor-pointer">
+                               <Upload className="w-4 h-4 mr-2" />
+                               {avatarFile ? avatarFile.name : "Choose file"}
+                             </label>
+                           </Button>
+                         </div>
+                       </div>
                     </div>
                   </div>
 
