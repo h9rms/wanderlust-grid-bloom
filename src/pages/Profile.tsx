@@ -16,10 +16,10 @@ interface Post {
   location?: string;
   created_at: string;
   user_id: string;
-  profiles: {
+  profiles?: {
     username?: string;
     full_name?: string;
-  };
+  } | null;
 }
 
 const Profile = () => {

@@ -20,10 +20,10 @@ interface PostCardProps {
     location?: string;
     created_at: string;
     user_id: string;
-    profiles: {
+    profiles?: {
       username?: string;
       full_name?: string;
-    };
+    } | null;
   };
   onPostUpdated: () => void;
   onPostDeleted: () => void;
