@@ -26,19 +26,33 @@ const BlogGrid = () => {
 
   const loadPosts = async () => {
     try {
-      const { data, error } = await supabase
+      // Get posts
+      const { data: postsData, error: postsError } = await supabase
         .from('posts')
-        .select(`
-          *,
-          profiles (
-            username,
-            full_name
-          )
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setPosts(data || []);
+      if (postsError) throw postsError;
+
+      // Get profiles for the users
+      const userIds = [...new Set(postsData?.map(post => post.user_id) || [])];
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('user_id, username, full_name')
+        .in('user_id', userIds);
+
+      if (profilesError) throw profilesError;
+
+      // Combine posts with profiles
+      const postsWithProfiles = postsData?.map(post => ({
+        ...post,
+        profiles: profilesData?.find(profile => profile.user_id === post.user_id) || {
+          username: undefined,
+          full_name: undefined
+        }
+      })) || [];
+
+      setPosts(postsWithProfiles);
     } catch (error) {
       console.error('Error loading posts:', error);
     } finally {

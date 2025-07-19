@@ -54,48 +54,71 @@ const Profile = () => {
       // Load user's posts
       const { data: postsData } = await supabase
         .from('posts')
-        .select(`
-          *,
-          profiles (
-            username,
-            full_name
-          )
-        `)
+        .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      setMyPosts(postsData || []);
+
+      // Get profiles for user's posts
+      const userIds = [...new Set(postsData?.map(post => post.user_id) || [])];
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('user_id, username, full_name')
+        .in('user_id', userIds);
+
+      const myPostsWithProfiles = postsData?.map(post => ({
+        ...post,
+        profiles: profilesData?.find(profile => profile.user_id === post.user_id) || {
+          username: undefined,
+          full_name: undefined
+        }
+      })) || [];
+      setMyPosts(myPostsWithProfiles);
 
       // Load liked posts
       const { data: likedData } = await supabase
         .from('post_likes')
-        .select(`
-          posts!inner (
-            *,
-            profiles (
-              username,
-              full_name
-            )
-          )
-        `)
+        .select('posts(*)')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      setLikedPosts(likedData?.map(item => item.posts).filter(Boolean) as Post[] || []);
+
+      const likedPostsData = likedData?.map(item => item.posts).filter(Boolean) || [];
+      const likedUserIds = [...new Set(likedPostsData.map(post => post.user_id))];
+      const { data: likedProfilesData } = await supabase
+        .from('profiles')
+        .select('user_id, username, full_name')
+        .in('user_id', likedUserIds);
+
+      const likedPostsWithProfiles = likedPostsData.map(post => ({
+        ...post,
+        profiles: likedProfilesData?.find(profile => profile.user_id === post.user_id) || {
+          username: undefined,
+          full_name: undefined
+        }
+      }));
+      setLikedPosts(likedPostsWithProfiles);
 
       // Load saved posts
       const { data: savedData } = await supabase
         .from('saved_posts')
-        .select(`
-          posts!inner (
-            *,
-            profiles (
-              username,
-              full_name
-            )
-          )
-        `)
+        .select('posts(*)')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
-      setSavedPosts(savedData?.map(item => item.posts).filter(Boolean) as Post[] || []);
+
+      const savedPostsData = savedData?.map(item => item.posts).filter(Boolean) || [];
+      const savedUserIds = [...new Set(savedPostsData.map(post => post.user_id))];
+      const { data: savedProfilesData } = await supabase
+        .from('profiles')
+        .select('user_id, username, full_name')
+        .in('user_id', savedUserIds);
+
+      const savedPostsWithProfiles = savedPostsData.map(post => ({
+        ...post,
+        profiles: savedProfilesData?.find(profile => profile.user_id === post.user_id) || {
+          username: undefined,
+          full_name: undefined
+        }
+      }));
+      setSavedPosts(savedPostsWithProfiles);
 
     } catch (error) {
       console.error('Error loading user data:', error);
