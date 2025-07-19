@@ -11,10 +11,10 @@ const Header = () => {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: 'Home', href: '#home', icon: Heart },
-    { name: 'Destinations', href: '#destinations', icon: MapPin },
-    { name: 'Stories', href: '#stories', icon: Camera },
-    { name: 'About', href: '#about', icon: Heart },
+    { name: 'Home', href: '/#home', icon: Heart },
+    { name: 'Destinations', href: '/#destinations', icon: MapPin },
+    { name: 'Stories', href: '/#stories', icon: Camera },
+    { name: 'About', href: '/#about', icon: Heart },
   ];
 
   const handleProfileClick = () => {
@@ -51,6 +51,14 @@ const Header = () => {
                 href={item.href}
                 whileHover={{ scale: 1.05 }}
                 className="text-muted-foreground hover:text-foreground travel-transition font-medium"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (window.location.pathname !== '/') {
+                    window.location.href = item.href;
+                  } else {
+                    document.querySelector(item.href.substring(1))?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               >
                 {item.name}
               </motion.a>
@@ -126,7 +134,15 @@ const Header = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsMenuOpen(false);
+                  if (window.location.pathname !== '/') {
+                    window.location.href = item.href;
+                  } else {
+                    document.querySelector(item.href.substring(1))?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
                 className="flex items-center space-x-3 py-3 text-muted-foreground hover:text-foreground travel-transition"
               >
                 <item.icon className="w-4 h-4" />
