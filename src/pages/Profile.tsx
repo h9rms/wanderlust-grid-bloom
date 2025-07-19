@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Heart, Bookmark, MapPin, Calendar, Settings } from 'lucide-react';
+import { User, Heart, Bookmark, MapPin, Calendar, Settings, Camera, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PostCard from '@/components/PostCard';
+import Header from '@/components/Header';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 interface Post {
   id: string;
@@ -28,9 +35,19 @@ const Profile = () => {
   const [savedPosts, setSavedPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string>('');
+  const [formData, setFormData] = useState({
+    full_name: '',
+    username: '',
+    bio: ''
+  });
 
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   // Redirect if not logged in
   useEffect(() => {
@@ -48,8 +65,18 @@ const Profile = () => {
         .from('profiles')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
       setUserProfile(profileData);
+      
+      // Update form data when profile loads
+      if (profileData) {
+        setFormData({
+          full_name: profileData.full_name || '',
+          username: profileData.username || '',
+          bio: profileData.bio || ''
+        });
+        setAvatarPreview(profileData.avatar_url || '');
+      }
 
       // Load user's posts
       const { data: postsData } = await supabase
@@ -139,6 +166,86 @@ const Profile = () => {
     loadUserData();
   };
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      setAvatarPreview(previewUrl);
+    }
+  };
+
+  const handleAvatarUpload = async (): Promise<string | null> => {
+    if (!avatarFile || !user) return null;
+
+    try {
+      const fileExt = avatarFile.name.split('.').pop();
+      const fileName = `${user.id}/avatar.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('post-images')
+        .upload(fileName, avatarFile, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('post-images')
+        .getPublicUrl(fileName);
+
+      return urlData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading avatar:', error);
+      return null;
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+
+    setEditLoading(true);
+    try {
+      let avatarUrl = userProfile?.avatar_url || '';
+      
+      // Upload new avatar if selected
+      if (avatarFile) {
+        const uploadedUrl = await handleAvatarUpload();
+        if (uploadedUrl) {
+          avatarUrl = uploadedUrl;
+        }
+      }
+
+      // Update or insert profile
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          full_name: formData.full_name,
+          username: formData.username,
+          bio: formData.bio,
+          avatar_url: avatarUrl
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Profile updated!",
+        description: "Your profile has been saved successfully."
+      });
+
+      setIsSettingsOpen(false);
+      setAvatarFile(null);
+      loadUserData();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update profile.",
+        variant: "destructive"
+      });
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   if (!user) return null;
 
   if (loading) {
@@ -149,13 +256,15 @@ const Profile = () => {
     );
   }
 
-  const joinDate = new Date(user.created_at).toLocaleDateString('de-DE', {
+  const joinDate = new Date(user.created_at).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-travel-sand via-background to-travel-coral/10">
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-travel-sand via-background to-travel-coral/10 pt-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Profile Header */}
         <motion.div
@@ -165,16 +274,27 @@ const Profile = () => {
         >
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
             {/* Avatar */}
-            <div className="w-24 h-24 bg-travel-turquoise rounded-full flex items-center justify-center">
-              <User className="w-12 h-12 text-white" />
+            <div className="relative w-24 h-24 bg-travel-turquoise rounded-full flex items-center justify-center overflow-hidden">
+              {userProfile?.avatar_url ? (
+                <img 
+                  src={userProfile.avatar_url} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <User className="w-12 h-12 text-white" />
+              )}
             </div>
 
             {/* Profile Info */}
             <div className="flex-1 text-center md:text-left">
               <h1 className="font-playfair text-3xl font-bold text-foreground mb-2">
-                {userProfile?.full_name || userProfile?.username || 'My Profile'}
+                {userProfile?.full_name || userProfile?.username || user.email?.split('@')[0] || 'My Profile'}
               </h1>
               <p className="text-muted-foreground mb-2">{user.email}</p>
+              {userProfile?.bio && (
+                <p className="text-muted-foreground mb-2 italic">{userProfile.bio}</p>
+              )}
               <div className="flex items-center justify-center md:justify-start text-sm text-muted-foreground mb-4">
                 <Calendar className="w-4 h-4 mr-1" />
                 Member since {joinDate}
@@ -198,10 +318,103 @@ const Profile = () => {
             </div>
 
             {/* Settings Button */}
-            <Button variant="outline" size="sm">
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </Button>
+            <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Settings
+                </Button>
+              </DialogTrigger>
+              
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Edit Profile</DialogTitle>
+                </DialogHeader>
+                
+                <div className="space-y-6">
+                  {/* Avatar Upload */}
+                  <div className="space-y-2">
+                    <Label>Profile Picture</Label>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-16 h-16 bg-travel-turquoise rounded-full flex items-center justify-center overflow-hidden">
+                        {avatarPreview ? (
+                          <img 
+                            src={avatarPreview} 
+                            alt="Preview" 
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <User className="w-8 h-8 text-white" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleAvatarChange}
+                          className="text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Full Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="full_name">Full Name</Label>
+                    <Input
+                      id="full_name"
+                      value={formData.full_name}
+                      onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                      placeholder="Your full name"
+                    />
+                  </div>
+
+                  {/* Username */}
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Username</Label>
+                    <Input
+                      id="username"
+                      value={formData.username}
+                      onChange={(e) => setFormData({...formData, username: e.target.value})}
+                      placeholder="Your username"
+                    />
+                  </div>
+
+                  {/* Bio */}
+                  <div className="space-y-2">
+                    <Label htmlFor="bio">Bio</Label>
+                    <Textarea
+                      id="bio"
+                      value={formData.bio}
+                      onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                      placeholder="Tell us about yourself..."
+                      className="min-h-[80px]"
+                    />
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-end space-x-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsSettingsOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleSaveProfile}
+                      disabled={editLoading}
+                      className="bg-travel-turquoise hover:bg-travel-turquoise/90"
+                    >
+                      {editLoading ? (
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                      ) : null}
+                      Save Changes
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </motion.div>
 
@@ -301,7 +514,8 @@ const Profile = () => {
           </Tabs>
         </motion.div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
