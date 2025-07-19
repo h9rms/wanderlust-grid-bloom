@@ -36,7 +36,7 @@ const Auth = () => {
         const { error } = await signIn(email, password);
         if (error) {
           if (error.message === 'Invalid login credentials') {
-            setError('Ungültige E-Mail-Adresse oder Passwort');
+            setError('Invalid email address or password');
           } else {
             setError(error.message);
           }
@@ -47,17 +47,17 @@ const Auth = () => {
         const { error } = await signUp(email, password, fullName);
         if (error) {
           if (error.message === 'User already registered') {
-            setError('Diese E-Mail-Adresse ist bereits registriert');
+            setError('This email address is already registered');
           } else {
             setError(error.message);
           }
         } else {
           setError('');
-          alert('Registrierung erfolgreich! Bitte überprüfe deine E-Mails zur Bestätigung.');
+          alert('Registration successful! Please check your emails for confirmation.');
         }
       }
     } catch (err) {
-      setError('Ein unerwarteter Fehler ist aufgetreten');
+      setError('An unexpected error occurred');
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ const Auth = () => {
             </span>
           </motion.div>
           <p className="text-muted-foreground">
-            {isLogin ? 'Willkommen zurück!' : 'Beginne dein Abenteuer'}
+            {isLogin ? 'Welcome back!' : 'Start your adventure'}
           </p>
         </div>
 
@@ -106,7 +106,7 @@ const Auth = () => {
                 className="space-y-2"
               >
                 <Label htmlFor="fullName" className="text-sm font-medium">
-                  Vollständiger Name
+                  Full Name
                 </Label>
                 <div className="relative">
                   <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -116,7 +116,7 @@ const Auth = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="pl-10"
-                    placeholder="Max Mustermann"
+                    placeholder="John Doe"
                     required={!isLogin}
                   />
                 </div>
@@ -126,7 +126,7 @@ const Auth = () => {
             {/* Email Field */}
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">
-                E-Mail-Adresse
+                Email Address
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -136,7 +136,7 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
-                  placeholder="deine@email.com"
+                  placeholder="your@email.com"
                   required
                 />
               </div>
@@ -145,7 +145,7 @@ const Auth = () => {
             {/* Password Field */}
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium">
-                Passwort
+                Password
               </Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -184,7 +184,7 @@ const Auth = () => {
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                isLogin ? 'Anmelden' : 'Registrieren'
+                isLogin ? 'Sign In' : 'Sign Up'
               )}
             </Button>
           </form>
@@ -192,7 +192,7 @@ const Auth = () => {
           {/* Toggle Login/Register */}
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              {isLogin ? 'Noch kein Konto?' : 'Bereits registriert?'}
+              {isLogin ? 'Don\'t have an account?' : 'Already registered?'}
             </p>
             <Button
               type="button"
@@ -203,7 +203,7 @@ const Auth = () => {
               }}
               className="text-travel-turquoise hover:text-travel-turquoise/80 font-medium"
             >
-              {isLogin ? 'Jetzt registrieren' : 'Jetzt anmelden'}
+              {isLogin ? 'Sign up now' : 'Sign in now'}
             </Button>
           </div>
         </motion.div>
@@ -215,7 +215,7 @@ const Auth = () => {
             onClick={() => navigate('/')}
             className="text-muted-foreground hover:text-foreground"
           >
-            ← Zurück zur Startseite
+            ← Back to Home
           </Button>
         </div>
       </motion.div>

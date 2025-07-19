@@ -77,7 +77,7 @@ const Header = () => {
                     className="text-muted-foreground hover:text-foreground"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
-                    Abmelden
+                     Sign Out
                   </Button>
                 </div>
               ) : (
@@ -88,7 +88,7 @@ const Header = () => {
                   className="border-travel-turquoise text-travel-turquoise hover:bg-travel-turquoise hover:text-white"
                 >
                   <User className="w-4 h-4 mr-2" />
-                  Anmelden
+                   Sign In
                 </Button>
               )}
             </div>
@@ -156,7 +156,7 @@ const Header = () => {
                     className="flex items-center space-x-3 py-2 text-muted-foreground hover:text-foreground travel-transition w-full"
                   >
                     <LogOut className="w-4 h-4" />
-                    <span>Abmelden</span>
+                    <span>Sign Out</span>
                   </motion.button>
                 </div>
               ) : (
@@ -168,7 +168,7 @@ const Header = () => {
                   className="flex items-center space-x-3 py-2 text-travel-turquoise hover:text-travel-turquoise/80 travel-transition w-full"
                 >
                   <User className="w-4 h-4" />
-                  <span>Anmelden</span>
+                  <span>Sign In</span>
                 </motion.button>
               )}
             </div>
