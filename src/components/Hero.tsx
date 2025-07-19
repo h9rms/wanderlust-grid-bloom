@@ -58,7 +58,7 @@ const Hero = () => {
             <Button 
               variant="outline" 
               size="lg"
-              className="border-white text-white hover:bg-white hover:text-foreground px-8 py-3 rounded-full travel-transition group"
+              className="border-white text-white hover:bg-white hover:text-travel-ocean px-8 py-3 rounded-full travel-transition group"
             >
               <Camera className="w-5 h-5 mr-2 group-hover:animate-pulse" />
               View Stories
