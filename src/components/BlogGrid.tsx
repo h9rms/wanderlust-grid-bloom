@@ -1,183 +1,135 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, User, ArrowRight, Heart } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import blogTemple from '@/assets/blog-temple.jpg';
-import blogMarket from '@/assets/blog-market.jpg';
-import blogMountain from '@/assets/blog-mountain.jpg';
+import PostCard from './PostCard';
+import CreatePost from './CreatePost';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  image_url?: string;
+  location?: string;
+  created_at: string;
+  user_id: string;
+  profiles: {
+    username?: string;
+    full_name?: string;
+  };
+}
 
 const BlogGrid = () => {
-  const blogPosts = [
-    {
-      id: 1,
-      title: "Hidden Temples of Southeast Asia",
-      excerpt: "Discover ancient temples tucked away in lush jungles, where spirituality meets architectural wonder.",
-      image: blogTemple,
-      author: "Maya Chen",
-      date: "March 15, 2024",
-      location: "Cambodia",
-      category: "Culture",
-      readTime: "5 min read",
-      likes: 234
-    },
-    {
-      id: 2,
-      title: "Vibrant Markets of Morocco",
-      excerpt: "Lose yourself in the colorful chaos of Moroccan souks, where every corner tells a story.",
-      image: blogMarket,
-      author: "Omar Hassan",
-      date: "March 10, 2024",
-      location: "Marrakech",
-      category: "Culture",
-      readTime: "7 min read",
-      likes: 189
-    },
-    {
-      id: 3,
-      title: "Serene Mountain Lakes",
-      excerpt: "Find peace in pristine alpine lakes that mirror the sky and surrounding peaks perfectly.",
-      image: blogMountain,
-      author: "Alex Rivera",
-      date: "March 5, 2024",
-      location: "Switzerland",
-      category: "Nature",
-      readTime: "4 min read",
-      likes: 312
-    }
-  ];
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3
-      }
+  const loadPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .select(`
+          *,
+          profiles (
+            username,
+            full_name
+          )
+        `)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setPosts(data || []);
+    } catch (error) {
+      console.error('Error loading posts:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 }
+  useEffect(() => {
+    loadPosts();
+  }, []);
+
+  const handlePostCreated = () => {
+    loadPosts();
+  };
+
+  const handlePostUpdated = () => {
+    loadPosts();
+  };
+
+  const handlePostDeleted = () => {
+    loadPosts();
   };
 
   return (
-    <section id="stories" className="py-20 bg-background">
+    <section id="stories" className="py-20 bg-gradient-to-b from-background to-travel-sand/10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
+          className="text-center mb-16"
         >
-          <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Latest Travel Stories
+          <h2 className="font-playfair text-4xl md:text-5xl font-bold text-foreground mb-6">
+            Reise-Geschichten
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Immerse yourself in captivating tales from around the globe, where every journey unfolds a new adventure
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+            Entdecke inspirierende Abenteuer und teile deine eigenen Erlebnisse
           </p>
+          
+          {user && (
+            <div className="flex justify-center">
+              <CreatePost onPostCreated={handlePostCreated} />
+            </div>
+          )}
         </motion.div>
 
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {blogPosts.map((post) => (
-            <motion.div
-              key={post.id}
-              variants={cardVariants}
-              whileHover={{ y: -8 }}
-              className="group"
-            >
-              <Card className="overflow-hidden travel-shadow hover:travel-shadow-warm travel-transition border-border/50 bg-card">
-                <div className="relative overflow-hidden">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-64 object-cover group-hover:scale-105 travel-transition"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-travel-turquoise text-white text-sm rounded-full font-medium">
-                      {post.category}
-                    </span>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 rounded-full p-2"
-                    >
-                      <Heart className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <CardContent className="p-6">
-                  <div className="flex items-center text-sm text-muted-foreground mb-3 space-x-4">
-                    <div className="flex items-center">
-                      <MapPin className="w-3 h-3 mr-1" />
-                      {post.location}
-                    </div>
-                    <div className="flex items-center">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      {post.date}
-                    </div>
-                  </div>
-                  
-                  <h3 className="font-playfair text-xl font-semibold text-foreground mb-3 group-hover:text-travel-turquoise travel-transition">
-                    {post.title}
-                  </h3>
-                  
-                  <p className="text-muted-foreground mb-4 line-clamp-2">
-                    {post.excerpt}
-                  </p>
-                  
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-travel-sand rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-travel-turquoise" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{post.author}</p>
-                        <p className="text-xs text-muted-foreground">{post.readTime}</p>
-                      </div>
-                    </div>
-                    
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-travel-turquoise hover:text-travel-ocean p-0 group"
-                    >
-                      Read More
-                      <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 travel-transition" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <motion.div 
-          className="text-center mt-12"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          <Button 
-            size="lg" 
-            variant="outline"
-            className="border-travel-turquoise text-travel-turquoise hover:bg-travel-turquoise hover:text-white px-8 py-3 rounded-full travel-transition"
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-card rounded-2xl p-6 animate-pulse">
+                <div className="w-full h-48 bg-muted rounded-lg mb-4"></div>
+                <div className="h-4 bg-muted rounded mb-2"></div>
+                <div className="h-4 bg-muted rounded w-3/4"></div>
+              </div>
+            ))}
+          </div>
+        ) : posts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post, index) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <PostCard
+                  post={post}
+                  onPostUpdated={handlePostUpdated}
+                  onPostDeleted={handlePostDeleted}
+                />
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-12"
           >
-            View All Stories
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
-        </motion.div>
+            <p className="text-muted-foreground text-lg mb-4">
+              Noch keine Posts vorhanden.
+            </p>
+            {user && (
+              <p className="text-muted-foreground">
+                Sei der erste und erstelle einen Post!
+              </p>
+            )}
+          </motion.div>
+        )}
       </div>
     </section>
   );

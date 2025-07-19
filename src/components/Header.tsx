@@ -17,6 +17,10 @@ const Header = () => {
     { name: 'About', href: '#about', icon: Heart },
   ];
 
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
+
   return (
     <motion.header
       initial={{ y: -100 }}
@@ -56,15 +60,16 @@ const Header = () => {
             <div className="flex items-center space-x-4">
               {user ? (
                 <div className="flex items-center space-x-3">
-                  <motion.div
+                  <motion.button
+                    onClick={handleProfileClick}
                     whileHover={{ scale: 1.05 }}
-                    className="flex items-center space-x-2 text-muted-foreground"
+                    className="flex items-center space-x-2 text-muted-foreground hover:text-foreground travel-transition"
                   >
                     <User className="w-4 h-4" />
                     <span className="text-sm font-medium">
                       {user.email?.split('@')[0]}
                     </span>
-                  </motion.div>
+                  </motion.button>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -133,12 +138,16 @@ const Header = () => {
             <div className="pt-4 border-t border-border mt-4">
               {user ? (
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-3 py-2 text-muted-foreground">
+                  <motion.button
+                    onClick={() => {
+                      handleProfileClick();
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center space-x-3 py-2 text-muted-foreground hover:text-foreground travel-transition w-full"
+                  >
                     <User className="w-4 h-4" />
-                    <span className="text-sm font-medium">
-                      {user.email?.split('@')[0]}
-                    </span>
-                  </div>
+                    <span>{user.email?.split('@')[0]}</span>
+                  </motion.button>
                   <motion.button
                     onClick={() => {
                       signOut();
