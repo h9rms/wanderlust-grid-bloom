@@ -223,6 +223,8 @@ const Profile = () => {
           username: formData.username,
           bio: formData.bio,
           avatar_url: avatarUrl
+        }, {
+          onConflict: 'user_id'
         });
 
       if (error) throw error;
