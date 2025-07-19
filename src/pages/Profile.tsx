@@ -228,8 +228,8 @@ const Profile = () => {
       if (error) throw error;
 
       toast({
-        title: "Profil aktualisiert!",
-        description: "Ihr Profil wurde erfolgreich gespeichert."
+        title: "Profile updated!",
+        description: "Your profile has been saved successfully."
       });
 
       setIsSettingsOpen(false);
@@ -237,8 +237,8 @@ const Profile = () => {
       loadUserData();
     } catch (error: any) {
       toast({
-        title: "Fehler",
-        description: error.message || "Profil konnte nicht aktualisiert werden.",
+        title: "Error",
+        description: error.message || "Failed to update profile.",
         variant: "destructive"
       });
     } finally {
@@ -256,7 +256,7 @@ const Profile = () => {
     );
   }
 
-  const joinDate = new Date(user.created_at).toLocaleDateString('de-DE', {
+  const joinDate = new Date(user.created_at).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
   });
@@ -297,22 +297,22 @@ const Profile = () => {
               )}
               <div className="flex items-center justify-center md:justify-start text-sm text-muted-foreground mb-4">
                 <Calendar className="w-4 h-4 mr-1" />
-                Mitglied seit {joinDate}
+                Member since {joinDate}
               </div>
 
               {/* Stats */}
               <div className="flex justify-center md:justify-start space-x-6">
                 <div className="text-center">
                   <div className="font-semibold text-foreground">{myPosts.length}</div>
-                  <div className="text-sm text-muted-foreground">Beiträge</div>
+                  <div className="text-sm text-muted-foreground">Posts</div>
                 </div>
                 <div className="text-center">
                   <div className="font-semibold text-foreground">{likedPosts.length}</div>
-                  <div className="text-sm text-muted-foreground">Gelikte Beiträge</div>
+                  <div className="text-sm text-muted-foreground">Liked Posts</div>
                 </div>
                 <div className="text-center">
                   <div className="font-semibold text-foreground">{savedPosts.length}</div>
-                  <div className="text-sm text-muted-foreground">Gespeicherte Beiträge</div>
+                  <div className="text-sm text-muted-foreground">Saved Posts</div>
                 </div>
               </div>
             </div>
@@ -322,25 +322,25 @@ const Profile = () => {
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Settings className="w-4 h-4 mr-2" />
-                  Einstellungen
+                  Settings
                 </Button>
               </DialogTrigger>
               
               <DialogContent className="max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Profil bearbeiten</DialogTitle>
+                  <DialogTitle>Edit Profile</DialogTitle>
                 </DialogHeader>
                 
                 <div className="space-y-6">
                   {/* Avatar Upload */}
                   <div className="space-y-2">
-                    <Label>Profilbild</Label>
+                    <Label>Profile Picture</Label>
                     <div className="flex items-center space-x-4">
                       <div className="w-16 h-16 bg-travel-turquoise rounded-full flex items-center justify-center overflow-hidden">
                         {avatarPreview ? (
                           <img 
                             src={avatarPreview} 
-                            alt="Vorschau" 
+                            alt="Preview" 
                             className="w-full h-full object-cover"
                           />
                         ) : (
@@ -360,34 +360,34 @@ const Profile = () => {
 
                   {/* Full Name */}
                   <div className="space-y-2">
-                    <Label htmlFor="full_name">Vollständiger Name</Label>
+                    <Label htmlFor="full_name">Full Name</Label>
                     <Input
                       id="full_name"
                       value={formData.full_name}
                       onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                      placeholder="Ihr vollständiger Name"
+                      placeholder="Your full name"
                     />
                   </div>
 
                   {/* Username */}
                   <div className="space-y-2">
-                    <Label htmlFor="username">Benutzername</Label>
+                    <Label htmlFor="username">Username</Label>
                     <Input
                       id="username"
                       value={formData.username}
                       onChange={(e) => setFormData({...formData, username: e.target.value})}
-                      placeholder="Ihr Benutzername"
+                      placeholder="Your username"
                     />
                   </div>
 
                   {/* Bio */}
                   <div className="space-y-2">
-                    <Label htmlFor="bio">Über mich</Label>
+                    <Label htmlFor="bio">Bio</Label>
                     <Textarea
                       id="bio"
                       value={formData.bio}
                       onChange={(e) => setFormData({...formData, bio: e.target.value})}
-                      placeholder="Erzählen Sie uns von sich..."
+                      placeholder="Tell us about yourself..."
                       className="min-h-[80px]"
                     />
                   </div>
@@ -399,7 +399,7 @@ const Profile = () => {
                       variant="outline"
                       onClick={() => setIsSettingsOpen(false)}
                     >
-                      Abbrechen
+                      Cancel
                     </Button>
                     <Button
                       onClick={handleSaveProfile}
@@ -409,7 +409,7 @@ const Profile = () => {
                       {editLoading ? (
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
                       ) : null}
-                      Änderungen speichern
+                      Save Changes
                     </Button>
                   </div>
                 </div>
@@ -428,15 +428,15 @@ const Profile = () => {
             <TabsList className="grid w-full grid-cols-3 mb-8">
               <TabsTrigger value="posts" className="flex items-center">
                 <User className="w-4 h-4 mr-2" />
-                Meine Beiträge
+                My Posts
               </TabsTrigger>
               <TabsTrigger value="liked" className="flex items-center">
                 <Heart className="w-4 h-4 mr-2" />
-                Gelikte Beiträge
+                Liked Posts
               </TabsTrigger>
               <TabsTrigger value="saved" className="flex items-center">
                 <Bookmark className="w-4 h-4 mr-2" />
-                Gespeicherte Beiträge
+                Saved Posts
               </TabsTrigger>
             </TabsList>
 
@@ -456,13 +456,13 @@ const Profile = () => {
                 <div className="text-center py-12">
                   <User className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                   <p className="text-muted-foreground text-lg">
-                    Sie haben noch keine Beiträge erstellt.
+                    You haven't created any posts yet.
                   </p>
                   <Button 
                     onClick={() => navigate('/')} 
                     className="mt-4 bg-travel-turquoise hover:bg-travel-turquoise/90"
                   >
-                    Ersten Beitrag erstellen
+                    Create first post
                   </Button>
                 </div>
               )}
@@ -484,7 +484,7 @@ const Profile = () => {
                 <div className="text-center py-12">
                   <Heart className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                   <p className="text-muted-foreground text-lg">
-                    Sie haben noch keine Beiträge geliket.
+                    You haven't liked any posts yet.
                   </p>
                 </div>
               )}
@@ -506,7 +506,7 @@ const Profile = () => {
                 <div className="text-center py-12">
                   <Bookmark className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                   <p className="text-muted-foreground text-lg">
-                    Sie haben noch keine Beiträge gespeichert.
+                    You haven't saved any posts yet.
                   </p>
                 </div>
               )}
