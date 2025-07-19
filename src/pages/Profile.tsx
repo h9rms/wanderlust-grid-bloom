@@ -26,6 +26,7 @@ interface Post {
   profiles?: {
     username?: string;
     full_name?: string;
+    avatar_url?: string;
   } | null;
 }
 
@@ -89,14 +90,15 @@ const Profile = () => {
       const userIds = [...new Set(postsData?.map(post => post.user_id) || [])];
       const { data: profilesData } = await supabase
         .from('profiles')
-        .select('user_id, username, full_name')
+        .select('user_id, username, full_name, avatar_url')
         .in('user_id', userIds);
 
       const myPostsWithProfiles = postsData?.map(post => ({
         ...post,
         profiles: profilesData?.find(profile => profile.user_id === post.user_id) || {
           username: undefined,
-          full_name: undefined
+          full_name: undefined,
+          avatar_url: undefined
         }
       })) || [];
       setMyPosts(myPostsWithProfiles);
@@ -112,14 +114,15 @@ const Profile = () => {
       const likedUserIds = [...new Set(likedPostsData.map(post => post.user_id))];
       const { data: likedProfilesData } = await supabase
         .from('profiles')
-        .select('user_id, username, full_name')
+        .select('user_id, username, full_name, avatar_url')
         .in('user_id', likedUserIds);
 
       const likedPostsWithProfiles = likedPostsData.map(post => ({
         ...post,
         profiles: likedProfilesData?.find(profile => profile.user_id === post.user_id) || {
           username: undefined,
-          full_name: undefined
+          full_name: undefined,
+          avatar_url: undefined
         }
       }));
       setLikedPosts(likedPostsWithProfiles);
@@ -135,14 +138,15 @@ const Profile = () => {
       const savedUserIds = [...new Set(savedPostsData.map(post => post.user_id))];
       const { data: savedProfilesData } = await supabase
         .from('profiles')
-        .select('user_id, username, full_name')
+        .select('user_id, username, full_name, avatar_url')
         .in('user_id', savedUserIds);
 
       const savedPostsWithProfiles = savedPostsData.map(post => ({
         ...post,
         profiles: savedProfilesData?.find(profile => profile.user_id === post.user_id) || {
           username: undefined,
-          full_name: undefined
+          full_name: undefined,
+          avatar_url: undefined
         }
       }));
       setSavedPosts(savedPostsWithProfiles);

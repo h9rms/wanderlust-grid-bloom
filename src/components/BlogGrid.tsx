@@ -16,6 +16,7 @@ interface Post {
   profiles?: {
     username?: string;
     full_name?: string;
+    avatar_url?: string;
   } | null;
 }
 
@@ -38,7 +39,7 @@ const BlogGrid = () => {
       const userIds = [...new Set(postsData?.map(post => post.user_id) || [])];
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
-        .select('user_id, username, full_name')
+        .select('user_id, username, full_name, avatar_url')
         .in('user_id', userIds);
 
       if (profilesError) throw profilesError;
@@ -48,7 +49,8 @@ const BlogGrid = () => {
         ...post,
         profiles: profilesData?.find(profile => profile.user_id === post.user_id) || {
           username: undefined,
-          full_name: undefined
+          full_name: undefined,
+          avatar_url: undefined
         }
       })) || [];
 

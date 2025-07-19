@@ -23,6 +23,7 @@ interface PostCardProps {
     profiles?: {
       username?: string;
       full_name?: string;
+      avatar_url?: string;
     } | null;
   };
   onPostUpdated: () => void;
@@ -269,10 +270,18 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
           {/* Header with author and menu */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-travel-turquoise rounded-full flex items-center justify-center">
-                <span className="text-white font-medium text-sm">
-                  {(post.profiles?.full_name || post.profiles?.username || 'User')[0].toUpperCase()}
-                </span>
+              <div className="w-10 h-10 bg-travel-turquoise rounded-full flex items-center justify-center overflow-hidden">
+                {post.profiles?.avatar_url ? (
+                  <img 
+                    src={post.profiles.avatar_url} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white font-medium text-sm">
+                    {(post.profiles?.full_name || post.profiles?.username || 'User')[0].toUpperCase()}
+                  </span>
+                )}
               </div>
               <div>
                 <p className="font-medium text-foreground">
