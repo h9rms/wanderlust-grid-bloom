@@ -40,6 +40,10 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
   const [editTitle, setEditTitle] = useState(post.title);
   const [editContent, setEditContent] = useState(post.content);
   const [editLocation, setEditLocation] = useState(post.location || '');
+  const [editImageFile, setEditImageFile] = useState<File | null>(null);
+  const [editImagePreview, setEditImagePreview] = useState<string | null>(null);
+  const [uploadMethod, setUploadMethod] = useState<'upload' | 'url'>('upload');
+  const [editImageUrl, setEditImageUrl] = useState(post.image_url || '');
   const [loading, setLoading] = useState(false);
 
   const { user } = useAuth();
@@ -190,18 +194,41 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
     setLoading(true);
 
     try {
+      let finalImageUrl = editImageUrl;
+
+      // Upload new image if file is selected
+      if (editImageFile) {
+        const fileExt = editImageFile.name.split('.').pop();
+        const fileName = `${crypto.randomUUID()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('post-images')
+          .upload(fileName, editImageFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('post-images')
+          .getPublicUrl(fileName);
+
+        finalImageUrl = publicUrl;
+      }
+
       const { error } = await supabase
         .from('posts')
         .update({
           title: editTitle,
           content: editContent,
           location: editLocation || null,
+          image_url: finalImageUrl || null,
         })
         .eq('id', post.id);
 
       if (error) throw error;
 
       setIsEditOpen(false);
+      setEditImageFile(null);
+      setEditImagePreview(null);
       onPostUpdated();
       toast({
         title: "Post updated",
@@ -241,6 +268,26 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setEditImageFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setEditImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileSelect = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => handleImageFileChange(e as any);
+    input.click();
   };
 
   const handleCardClick = () => {
@@ -438,8 +485,71 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
                 id="editLocation"
                 value={editLocation}
                 onChange={(e) => setEditLocation(e.target.value)}
-                placeholder="z.B. Phuket, Thailand"
+                placeholder="e.g. Phuket, Thailand"
               />
+            </div>
+
+            {/* Image Upload Section */}
+            <div className="space-y-3">
+              <Label>Image</Label>
+              
+              {/* Method Toggle */}
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm" 
+                  onClick={() => {
+                    setUploadMethod('upload');
+                    triggerFileSelect();
+                  }}
+                  className={uploadMethod === 'upload' ? 'bg-travel-turquoise' : ''}
+                >
+                  Upload Image
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setUploadMethod('url')}
+                  className={uploadMethod === 'url' ? 'bg-travel-turquoise' : ''}
+                >
+                  Image URL
+                </Button>
+              </div>
+
+              {/* URL Input */}
+              {uploadMethod === 'url' && (
+                <Input
+                  placeholder="Enter image URL"
+                  value={editImageUrl}
+                  onChange={(e) => setEditImageUrl(e.target.value)}
+                />
+              )}
+
+              {/* Image Preview */}
+              {(editImagePreview || (uploadMethod === 'url' && editImageUrl) || post.image_url) && (
+                <div className="relative">
+                  <img
+                    src={editImagePreview || (uploadMethod === 'url' ? editImageUrl : post.image_url)}
+                    alt="Preview"
+                    className="w-full h-48 object-cover rounded-lg"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 right-2"
+                    onClick={() => {
+                      setEditImageFile(null);
+                      setEditImagePreview(null);
+                      setEditImageUrl('');
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              )}
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">
