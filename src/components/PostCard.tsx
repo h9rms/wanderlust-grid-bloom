@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, Bookmark, Share2, Edit, Trash2, MapPin, Calendar, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -31,6 +32,7 @@ interface PostCardProps {
 }
 
 const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
+  const navigate = useNavigate();
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
@@ -241,6 +243,10 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
     }
   };
 
+  const handleCardClick = () => {
+    navigate(`/post/${post.id}`);
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('de-DE', {
       year: 'numeric',
@@ -254,7 +260,8 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-xl travel-transition h-[600px] flex flex-col"
+        className="bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-xl travel-transition h-[600px] flex flex-col cursor-pointer"
+        onClick={handleCardClick}
       >
         <div className="relative h-48 overflow-hidden bg-muted">
           {post.image_url ? (
@@ -301,16 +308,26 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
             {isOwner && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <MoreHorizontal className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+                  <DropdownMenuItem onClick={(e) => {
+                    e.stopPropagation();
+                    setIsEditOpen(true);
+                  }}>
                     <Edit className="w-4 h-4 mr-2" />
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleDelete} className="text-destructive">
+                  <DropdownMenuItem onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete();
+                  }} className="text-destructive">
                     <Trash2 className="w-4 h-4 mr-2" />
                     Delete
                   </DropdownMenuItem>
@@ -346,7 +363,10 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleLike}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleLike();
+                }}
                 className={`${liked ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 <Heart className={`w-4 h-4 mr-1 ${liked ? 'fill-current' : ''}`} />
@@ -358,7 +378,10 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleSave}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSave();
+                }}
                 className={`${saved ? 'text-travel-turquoise' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 <Bookmark className={`w-4 h-4 ${saved ? 'fill-current' : ''}`} />
@@ -367,7 +390,10 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleShare}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleShare();
+                }}
                 className="text-muted-foreground hover:text-foreground"
               >
                 <Share2 className="w-4 h-4" />
