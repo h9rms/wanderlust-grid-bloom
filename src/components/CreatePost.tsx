@@ -154,7 +154,8 @@ const CreatePost = ({
             </div>
 
             {uploadMethod === 'upload' ? <div className="space-y-2">
-                <Input 
+                <input 
+                  id="file-upload"
                   type="file" 
                   accept="image/*" 
                   onChange={(e) => {
@@ -164,8 +165,17 @@ const CreatePost = ({
                       setError('');
                     }
                   }}
-                  className="h-12"
+                  className="hidden"
                 />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById('file-upload')?.click()}
+                  className="w-full h-12"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  {imageFile ? `Selected: ${imageFile.name}` : 'Choose File'}
+                </Button>
                 
                 {imageFile && <div className="mt-2">
                     <img src={URL.createObjectURL(imageFile)} alt="Preview" className="w-full h-40 object-cover rounded-lg" />
