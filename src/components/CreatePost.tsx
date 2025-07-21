@@ -154,29 +154,18 @@ const CreatePost = ({
             </div>
 
             {uploadMethod === 'upload' ? <div className="space-y-2">
-                <div className="flex items-center justify-center w-full">
-                  <label htmlFor="file-upload" className="flex flex-col items-center justify-center w-full h-12 border-2 border-dashed border-input rounded-lg cursor-pointer bg-background hover:bg-muted/50 transition-colors">
-                    <div className="flex items-center space-x-2">
-                      <Upload className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">
-                        {imageFile ? `Ausgewählt: ${imageFile.name}` : 'Datei auswählen oder hierher ziehen'}
-                      </span>
-                    </div>
-                  </label>
-                  <input 
-                    id="file-upload"
-                    type="file" 
-                    accept="image/*" 
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        setImageFile(file);
-                        setError('');
-                      }
-                    }}
-                    className="hidden"
-                  />
-                </div>
+                <Input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setImageFile(file);
+                      setError('');
+                    }
+                  }}
+                  className="h-12"
+                />
                 
                 {imageFile && <div className="mt-2">
                     <img src={URL.createObjectURL(imageFile)} alt="Preview" className="w-full h-40 object-cover rounded-lg" />
