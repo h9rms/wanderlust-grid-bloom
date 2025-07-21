@@ -588,7 +588,9 @@ const PostDetail = () => {
                     variant="destructive"
                     size="sm"
                     className="absolute top-2 right-2"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       setEditImageFile(null);
                       setEditImagePreview(null);
                       setEditImageUrl('');
