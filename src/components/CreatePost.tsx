@@ -163,9 +163,7 @@ const CreatePost = ({
                 size="sm" 
                 onClick={() => {
                   setUploadMethod('upload');
-                  if (uploadMethod !== 'upload') {
-                    triggerFileSelect();
-                  }
+                  triggerFileSelect();
                 }}
                 className={uploadMethod === 'upload' ? 'bg-travel-turquoise' : ''}
               >
