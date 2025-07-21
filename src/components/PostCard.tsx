@@ -256,15 +256,19 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-xl travel-transition h-[600px] flex flex-col"
       >
-        {post.image_url && (
-          <div className="relative aspect-[4/3] overflow-hidden">
+        <div className="relative h-48 overflow-hidden bg-muted">
+          {post.image_url ? (
             <img
               src={post.image_url}
               alt={post.title}
               className="w-full h-full object-cover hover:scale-105 travel-transition"
             />
-          </div>
-        )}
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+              <span>No Image</span>
+            </div>
+          )}
+        </div>
 
         <div className="p-6 flex-1 flex flex-col">
           {/* Header with author and menu */}
@@ -316,20 +320,25 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
           </div>
 
           {/* Content */}
-          <h3 className="font-playfair text-xl font-semibold text-foreground mb-3">
-            {post.title}
-          </h3>
-          
-          <p className="text-muted-foreground mb-4 line-clamp-4 flex-1">
-            {post.content}
-          </p>
+          <div className="flex-1 flex flex-col">
+            <h3 className="font-playfair text-xl font-semibold text-foreground mb-3 h-14 line-clamp-2">
+              {post.title}
+            </h3>
+            
+            <p className="text-muted-foreground mb-4 line-clamp-4 h-24 overflow-hidden">
+              {post.content}
+            </p>
 
-          {post.location && (
-            <div className="flex items-center text-sm text-muted-foreground mb-4">
-              <MapPin className="w-4 h-4 mr-1" />
-              {post.location}
+            <div className="h-6 mb-4">
+              {post.location && (
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  {post.location}
+                </div>
+              )}
             </div>
-          )}
+          </div>
+
 
           {/* Actions */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
