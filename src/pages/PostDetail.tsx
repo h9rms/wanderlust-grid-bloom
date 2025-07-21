@@ -583,21 +583,6 @@ const PostDetail = () => {
                     alt="Preview"
                     className="w-full h-48 object-cover rounded-lg"
                   />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    className="absolute top-2 right-2"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setEditImageFile(null);
-                      setEditImagePreview(null);
-                      setEditImageUrl('');
-                    }}
-                  >
-                    Remove
-                  </Button>
                 </div>
               )}
             </div>
