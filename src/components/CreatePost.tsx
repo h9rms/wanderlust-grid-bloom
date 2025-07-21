@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, X, MapPin, Upload, Image as ImageIcon } from 'lucide-react';
@@ -54,6 +55,19 @@ const CreatePost = ({
       setUploading(false);
     }
   };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setError('');
+    }
+  };
+
+  const triggerFileSelect = () => {
+    document.getElementById('file-upload')?.click();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -143,7 +157,18 @@ const CreatePost = ({
             
             {/* Upload Method Toggle */}
             <div className="flex space-x-2">
-              <Button type="button" variant={uploadMethod === 'upload' ? 'default' : 'outline'} size="sm" onClick={() => setUploadMethod('upload')} className={uploadMethod === 'upload' ? 'bg-travel-turquoise' : ''}>
+              <Button 
+                type="button" 
+                variant={uploadMethod === 'upload' ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => {
+                  setUploadMethod('upload');
+                  if (uploadMethod !== 'upload') {
+                    triggerFileSelect();
+                  }
+                }}
+                className={uploadMethod === 'upload' ? 'bg-travel-turquoise' : ''}
+              >
                 <Upload className="w-4 h-4 mr-2" />
                 Upload Image
               </Button>
@@ -158,27 +183,13 @@ const CreatePost = ({
                   id="file-upload"
                   type="file" 
                   accept="image/*" 
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setImageFile(file);
-                      setError('');
-                    }
-                  }}
+                  onChange={handleFileSelect}
                   className="hidden"
                 />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => document.getElementById('file-upload')?.click()}
-                  className="w-full h-12"
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  {imageFile ? `Selected: ${imageFile.name}` : 'Choose File'}
-                </Button>
                 
                 {imageFile && <div className="mt-2">
                     <img src={URL.createObjectURL(imageFile)} alt="Preview" className="w-full h-40 object-cover rounded-lg" />
+                    <p className="text-sm text-muted-foreground mt-1">Selected: {imageFile.name}</p>
                   </div>}
               </div> : <div className="space-y-2">
                 <Input value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://example.com/image.jpg" />
