@@ -254,7 +254,7 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-xl travel-transition"
+        className="bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-xl travel-transition h-[600px] flex flex-col"
       >
         {post.image_url && (
           <div className="relative aspect-[4/3] overflow-hidden">
@@ -266,7 +266,7 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
           </div>
         )}
 
-        <div className="p-6">
+        <div className="p-6 flex-1 flex flex-col">
           {/* Header with author and menu */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
@@ -320,7 +320,7 @@ const PostCard = ({ post, onPostUpdated, onPostDeleted }: PostCardProps) => {
             {post.title}
           </h3>
           
-          <p className="text-muted-foreground mb-4 line-clamp-3">
+          <p className="text-muted-foreground mb-4 line-clamp-4 flex-1">
             {post.content}
           </p>
 
