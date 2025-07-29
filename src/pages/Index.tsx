@@ -5,6 +5,7 @@ import BlogGrid from '@/components/BlogGrid';
 import TravelMap from '@/components/TravelMap';
 import About from '@/components/About';
 import Footer from '@/components/Footer';
+import ChatBot from '@/components/ChatBot';
 
 const Index = () => {
   useEffect(() => {
@@ -24,6 +25,7 @@ const Index = () => {
       <TravelMap />
       <About />
       <Footer />
+      <ChatBot />
     </div>
   );
 };
