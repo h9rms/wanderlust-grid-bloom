@@ -19,12 +19,12 @@ serve(async (req) => {
       throw new Error('Message is required');
     }
 
-    const deepseekApiKey = Deno.env.get('DEEPSEEK_API_KEY');
-    if (!deepseekApiKey) {
-      throw new Error('DEEPSEEK_API_KEY is not configured');
+    const groqApiKey = Deno.env.get('GROQ_API_KEY');
+    if (!groqApiKey) {
+      throw new Error('GROQ_API_KEY is not configured');
     }
 
-    // Prepare messages for Deepseek API
+    // Prepare messages for Groq API
     const messages = [
       {
         role: 'system',
@@ -37,16 +37,16 @@ serve(async (req) => {
       }
     ];
 
-    console.log('Sending request to Deepseek API...');
+    console.log('Sending request to Groq API...');
 
-    const response = await fetch('https://api.deepseek.com/chat/completions', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${deepseekApiKey}`,
+        'Authorization': `Bearer ${groqApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
+        model: 'llama-3.1-8b-instant',
         messages: messages,
         max_tokens: 1000,
         temperature: 0.7,
@@ -56,16 +56,16 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Deepseek API error:', errorText);
-      throw new Error(`Deepseek API error: ${response.status} ${errorText}`);
+      console.error('Groq API error:', errorText);
+      throw new Error(`Groq API error: ${response.status} ${errorText}`);
     }
 
     const data = await response.json();
-    console.log('Deepseek API response received');
+    console.log('Groq API response received');
 
     const assistantMessage = data.choices[0]?.message?.content;
     if (!assistantMessage) {
-      throw new Error('No response from Deepseek API');
+      throw new Error('No response from Groq API');
     }
 
     return new Response(JSON.stringify({ 
@@ -76,7 +76,7 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error in chat-deepseek function:', error);
+    console.error('Error in chat-groq function:', error);
     return new Response(JSON.stringify({ 
       error: error.message 
     }), {
