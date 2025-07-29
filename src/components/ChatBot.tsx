@@ -72,8 +72,8 @@ const ChatBot = () => {
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
-        title: "Fehler",
-        description: "Nachricht konnte nicht gesendet werden. Versuche es erneut.",
+        title: "Error",
+        description: "Message could not be sent. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -120,7 +120,7 @@ const ChatBot = () => {
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.2 }}
           >
-            <Card className="w-80 h-96 shadow-xl border-0 bg-background/95 backdrop-blur">
+            <Card className="w-96 h-[600px] shadow-xl border-0 bg-background/95 backdrop-blur">
               <CardHeader className="pb-3 border-b">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg flex items-center gap-2">
@@ -154,8 +154,8 @@ const ChatBot = () => {
                   {messages.length === 0 ? (
                     <div className="text-center text-muted-foreground text-sm py-8">
                       <Bot className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                      Hallo! Ich bin dein Travel Assistant. 
-                      Frag mich gerne etwas über Reisen oder den Blog!
+                      Hello! I'm your Travel Assistant.
+                      Feel free to ask me about travel or the blog!
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -221,7 +221,7 @@ const ChatBot = () => {
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Schreib eine Nachricht..."
+                      placeholder="Type a message..."
                       disabled={isLoading}
                       className="flex-1"
                     />

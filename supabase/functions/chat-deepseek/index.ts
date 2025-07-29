@@ -28,7 +28,7 @@ serve(async (req) => {
     const messages = [
       {
         role: 'system',
-        content: 'Du bist ein hilfreicher AI-Assistent für einen Travel Blog. Antworte freundlich und hilfsbereit auf Deutsch. Du kannst Fragen über Reisen, Destinations und die Blog-Inhalte beantworten.'
+        content: 'You are a helpful AI assistant for a Travel Blog. Answer friendly and helpfully in English. You can answer questions about travel, destinations and the blog content.'
       },
       ...(conversation || []),
       {
