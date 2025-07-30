@@ -94,37 +94,46 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* Chat Button */}
-      <motion.div
-        className="fixed bottom-6 right-6 z-50"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 1 }}
-      >
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="h-14 w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg"
-          size="icon"
+      {/* Chat Button - Only show when chat is closed */}
+      {!isOpen && (
+        <motion.div
+          className="fixed bottom-6 right-6 z-50"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 1 }}
         >
-          <MessageCircle className="h-6 w-6" />
-        </Button>
-      </motion.div>
+          <Button
+            onClick={() => setIsOpen(true)}
+            className="h-14 w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg"
+            size="icon"
+          >
+            <MessageCircle className="h-6 w-6" />
+          </Button>
+        </motion.div>
+      )}
 
       {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-24 right-6 z-50"
+            className="fixed bottom-6 right-6 z-50 w-full max-w-sm sm:w-96"
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.2 }}
           >
-            <Card className="w-96 h-[600px] shadow-xl border-0 bg-background/95 backdrop-blur">
+            <Card className="w-full h-[70vh] max-h-[600px] min-h-[400px] shadow-xl border-0 bg-background/95 backdrop-blur">
               <CardHeader className="pb-3 border-b">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <Bot className="h-5 w-5 text-primary" />
+                    <Button
+                      onClick={() => setIsOpen(false)}
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 p-0 mr-2"
+                    >
+                      <MessageCircle className="h-5 w-5 text-primary" />
+                    </Button>
                     Travel Assistant
                   </CardTitle>
                   <div className="flex gap-1">
@@ -133,6 +142,7 @@ const ChatBot = () => {
                       size="sm" 
                       onClick={clearChat}
                       className="h-8 w-8 p-0"
+                      title="Clear chat"
                     >
                       <span className="text-xs">Clear</span>
                     </Button>
@@ -141,6 +151,7 @@ const ChatBot = () => {
                       size="sm" 
                       onClick={() => setIsOpen(false)}
                       className="h-8 w-8 p-0"
+                      title="Close chat"
                     >
                       <X className="h-4 w-4" />
                     </Button>
