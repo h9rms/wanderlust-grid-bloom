@@ -30,19 +30,25 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="no-underline">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center space-x-2 cursor-pointer"
-            >
-              <div className="w-8 h-8 bg-travel-turquoise rounded-full flex items-center justify-center">
-                <MapPin className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-playfair text-xl font-semibold text-foreground">
-                Wanderlust
-              </span>
-            </motion.div>
-          </Link>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              if (window.location.pathname !== '/') {
+                navigate('/');
+              } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+          >
+            <div className="w-8 h-8 bg-travel-turquoise rounded-full flex items-center justify-center">
+              <MapPin className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-playfair text-xl font-semibold text-foreground">
+              Wanderlust
+            </span>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
