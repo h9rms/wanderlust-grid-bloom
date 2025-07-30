@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Menu, X, MapPin, Heart, Camera, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,7 +11,6 @@ const Header = () => {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: 'Home', href: '/#home', icon: Heart },
     { name: 'Destinations', href: '/#destinations', icon: MapPin },
     { name: 'Stories', href: '/#stories', icon: Camera },
     { name: 'About', href: '/#about', icon: Heart },
@@ -31,17 +30,19 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-2"
-          >
-            <div className="w-8 h-8 bg-travel-turquoise rounded-full flex items-center justify-center">
-              <MapPin className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-playfair text-xl font-semibold text-foreground">
-              Wanderlust
-            </span>
-          </motion.div>
+          <Link to="/" className="no-underline">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center space-x-2 cursor-pointer"
+            >
+              <div className="w-8 h-8 bg-travel-turquoise rounded-full flex items-center justify-center">
+                <MapPin className="w-4 h-4 text-white" />
+              </div>
+              <span className="font-playfair text-xl font-semibold text-foreground">
+                Wanderlust
+              </span>
+            </motion.div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
