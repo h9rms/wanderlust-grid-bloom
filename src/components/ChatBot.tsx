@@ -116,7 +116,7 @@ const ChatBot = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-6 right-6 z-50 w-full max-w-sm sm:w-96"
+            className="fixed inset-4 md:bottom-6 md:right-6 md:top-auto md:left-auto z-50 md:w-96 md:max-w-sm"
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
