@@ -122,7 +122,7 @@ const ChatBot = () => {
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.2 }}
           >
-            <Card className="w-full h-[80vh] max-h-[600px] min-h-[500px] shadow-xl border-0 bg-background/95 backdrop-blur flex flex-col">
+            <Card className="w-full h-[80vh] max-h-[600px] min-h-[500px] shadow-xl border-0 bg-background/95 backdrop-blur flex flex-col overflow-hidden">
               <CardHeader className="pb-3 border-b flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg flex items-center gap-2">
@@ -159,7 +159,7 @@ const ChatBot = () => {
                 </div>
               </CardHeader>
 
-              <CardContent className="p-0 flex flex-col h-full">
+              <CardContent className="p-0 flex flex-col flex-1 min-h-0">
                 {/* Messages */}
                 <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
                   {messages.length === 0 ? (
