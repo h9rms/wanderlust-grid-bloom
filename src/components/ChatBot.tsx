@@ -161,7 +161,7 @@ const ChatBot = () => {
 
               <CardContent className="p-0 flex flex-col flex-1 min-h-0">
                 {/* Messages */}
-                <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+                <ScrollArea className="flex-1 p-4 min-h-0" ref={scrollAreaRef}>
                   {messages.length === 0 ? (
                     <div className="text-center text-muted-foreground text-sm py-8">
                       <Bot className="h-8 w-8 mx-auto mb-2 opacity-50" />
